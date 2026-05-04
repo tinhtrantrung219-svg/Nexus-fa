@@ -1,0 +1,148 @@
+-- NEXUS UI LITE v1.0
+-- NO KEY | NO LOADSTRING | SIMPLE + CLEAN
+
+repeat task.wait() until game:IsLoaded()
+
+local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+local PlayerGui = lp:WaitForChild("PlayerGui")
+
+-- UI ROOT
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "NexusLiteUI"
+ScreenGui.Parent = PlayerGui
+ScreenGui.ResetOnSpawn = false
+
+-- MAIN FRAME
+local Main = Instance.new("Frame")
+Main.Size = UDim2.new(0, 450, 0, 300)
+Main.Position = UDim2.new(0.5, -225, 0.5, -150)
+Main.BackgroundColor3 = Color3.fromRGB(20,20,20)
+Main.Parent = ScreenGui
+Main.Active = true
+Main.Draggable = true
+
+-- TITLE
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1,0,0,40)
+Title.Text = "🔥 Nexus Lite UI"
+Title.TextColor3 = Color3.fromRGB(255,255,255)
+Title.BackgroundTransparency = 1
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+Title.Parent = Main
+
+-- TAB HOLDER
+local TabFrame = Instance.new("Frame")
+TabFrame.Size = UDim2.new(0,120,1,-40)
+TabFrame.Position = UDim2.new(0,0,0,40)
+TabFrame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+TabFrame.Parent = Main
+
+-- CONTENT
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1,-120,1,-40)
+Content.Position = UDim2.new(0,120,0,40)
+Content.BackgroundColor3 = Color3.fromRGB(25,25,25)
+Content.Parent = Main
+
+-- FUNCTION CREATE TAB
+local Tabs = {}
+
+local function CreateTab(name)
+    local Btn = Instance.new("TextButton")
+    Btn.Size = UDim2.new(1,0,0,40)
+    Btn.Text = name
+    Btn.BackgroundColor3 = Color3.fromRGB(40,40,40)
+    Btn.TextColor3 = Color3.new(1,1,1)
+    Btn.Parent = TabFrame
+
+    local Frame = Instance.new("Frame")
+    Frame.Size = UDim2.new(1,0,1,0)
+    Frame.Visible = false
+    Frame.BackgroundTransparency = 1
+    Frame.Parent = Content
+
+    Btn.MouseButton1Click:Connect(function()
+        for _,v in pairs(Content:GetChildren()) do
+            if v:IsA("Frame") then
+                v.Visible = false
+            end
+        end
+        Frame.Visible = true
+    end)
+
+    Tabs[name] = Frame
+    return Frame
+end
+
+-- CREATE BUTTON
+local function CreateButton(parent, text, callback)
+    local Btn = Instance.new("TextButton")
+    Btn.Size = UDim2.new(0,200,0,40)
+    Btn.Position = UDim2.new(0,20,0,20 + (#parent:GetChildren()*45))
+    Btn.Text = text
+    Btn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+    Btn.TextColor3 = Color3.new(1,1,1)
+    Btn.Parent = parent
+
+    Btn.MouseButton1Click:Connect(callback)
+end
+
+-- CREATE TOGGLE
+local function CreateToggle(parent, text, callback)
+    local Toggle = false
+
+    local Btn = Instance.new("TextButton")
+    Btn.Size = UDim2.new(0,200,0,40)
+    Btn.Position = UDim2.new(0,20,0,20 + (#parent:GetChildren()*45))
+    Btn.Text = text .. ": OFF"
+    Btn.BackgroundColor3 = Color3.fromRGB(80,80,80)
+    Btn.TextColor3 = Color3.new(1,1,1)
+    Btn.Parent = parent
+
+    Btn.MouseButton1Click:Connect(function()
+        Toggle = not Toggle
+        Btn.Text = text .. ": " .. (Toggle and "ON" or "OFF")
+        callback(Toggle)
+    end)
+end
+
+-- =========================
+-- TAB SETUP
+-- =========================
+local MainTab = CreateTab("Main")
+local FarmTab = CreateTab("Farm")
+
+-- DEFAULT TAB
+MainTab.Visible = true
+
+-- =========================
+-- FEATURES
+-- =========================
+
+CreateButton(MainTab, "Print Hello", function()
+    print("Hello from Nexus Lite")
+end)
+
+CreateToggle(MainTab, "Auto Click", function(state)
+    while state do
+        print("Clicking...")
+        task.wait(1)
+    end
+end)
+
+CreateToggle(FarmTab, "Auto Farm", function(state)
+    while state do
+        print("Farming...")
+        task.wait(2)
+    end
+end)
+
+CreateButton(FarmTab, "Teleport", function()
+    print("Teleporting...")
+end)
+
+-- =========================
+-- END
+-- =========================
